@@ -16,6 +16,10 @@
 #
 import webapp2
 import caesar
+import cgi
+
+def escape_html(text):
+    return cgi.escape(text, quote = True)
 
 def page(text_content, rot_content):
     header = "<header><h1>Encrypt this!</hi></header>"
@@ -41,7 +45,8 @@ class MainHandler(webapp2.RequestHandler):
         message = self.request.get("message")
         rot = int(self.request.get("rot"))
         encrypted_message = caesar.encrypt(message, rot)
-        self.response.write(page(encrypted_message, str(rot)))
+        escaped_encmessage = escape_html(encrypted_message)
+        self.response.write(page(escaped_encmessage, str(rot)))
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
